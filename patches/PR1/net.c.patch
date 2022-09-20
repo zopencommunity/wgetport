@@ -1,0 +1,19 @@
+diff --git a/libwget/net.c b/libwget/net.c
+index 7dd4936..eb92fd7 100644
+--- a/libwget/net.c
++++ b/libwget/net.c
+@@ -60,6 +60,14 @@
+ # define TCP_FASTOPEN_LINUX
+ #endif
+ 
++#if defined __MVS__
++# ifndef NI_MAXSERV
++#  define NI_MAXSERV 32
++# endif
++# ifndef NI_MAXHOST
++#  define NI_MAXHOST 1025
++# endif
++#endif
+ #include <wget.h>
+ #include "private.h"
+ #include "net.h"
