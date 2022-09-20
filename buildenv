@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+# Set up environment variables for general build tool to operate
+#
+export ZOPEN_TYPE="TARBALL"
+
+export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-2.0.1.tar.gz"
+export ZOPEN_TARBALL_DEPS="curl gzip make perl openssl zlib"
+
+export ZOPEN_BOOTSTRAP=skip
+
+if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+	export ZOPEN_BOOTSTRAP=skip
+fi
+
+export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes'"
+export OPENSSL_CFLAGS="-I\$OPENSSL_HOME/include -I\$ZLIB_HOME/include"
+export OPENSSL_LIBS="-L\$OPENSSL_HOME/lib -L\$ZLIB_HOME/lib -lcrypto -lssl -lz"
+
+export ZOPEN_EXTRA_CPPFLAGS="${OPENSSL_CFLAGS}"
+export LDFLAGS="${OPENSSL_LIBS}"
+#
+# Required for proper operation of (USS shipped) sed
+#
+export _UNIX03=YES
+
+zopen_check_results()
+{
+#!/bin/sh
+#
+# Results should be 0 errors, and no more than 10 failures
+# FAIL:	 10
+# ERROR: 0
+#
+set -x
+chk="$2_check.log"
+
+failures=$(egrep '^# FAIL:' ${chk} | tail -1 | awk ' { print $3; }')
+if [ ${failures} -gt 55 ]; then
+  return 2
+fi
+errors=$(egrep '^# ERROR:' ${chk} | tail -1 | awk ' { print $3; }')
+if [ ${errors} -gt 0 ]; then
+  return 2
+fi
+
+return 1
+}
