@@ -14,8 +14,15 @@ if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
 fi
 
 export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes'"
-export OPENSSL_CFLAGS="-I\$OPENSSL_HOME/include -I\$ZLIB_HOME/include"
-export OPENSSL_LIBS="-L\$OPENSSL_HOME/lib -L\$ZLIB_HOME/lib -lcrypto -lssl -lz"
+
+#
+# Need to resolve these env vars now 
+#
+cd $HOME/zopen/prod/openssl; . ./.env; cd $OLDPWD
+cd $HOME/zopen/prod/zlib; . ./.env; cd $OLDPWD
+
+export OPENSSL_CFLAGS="-I$OPENSSL_HOME/include -I$ZLIB_HOME/include"
+export OPENSSL_LIBS="-L$OPENSSL_HOME/lib -L$ZLIB_HOME/lib -lcrypto -lssl -lz"
 
 export ZOPEN_EXTRA_CPPFLAGS="${OPENSSL_CFLAGS}"
 export LDFLAGS="${OPENSSL_LIBS}"

@@ -1,0 +1,17 @@
+diff --git a/libwget/thread.c b/libwget/thread.c
+index 43558de..2a1c971 100644
+--- a/libwget/thread.c
++++ b/libwget/thread.c
+@@ -269,7 +269,11 @@ int wget_thread_kill(WGET_GCC_UNUSED wget_thread thread, WGET_GCC_UNUSED int sig
+  */
+ int wget_thread_join(wget_thread *thread)
+ {
+-	if (thread && *thread && (*thread)->tid) {
++	if (thread && *thread
++#ifndef __MVS__ 
++  && (*thread)->tid
++#endif
++    ) {
+ 		int rc = glthread_join((*thread)->tid, NULL);
+ 		xfree(*thread);
+ 		return rc;

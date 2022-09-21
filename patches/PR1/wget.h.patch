@@ -1,0 +1,18 @@
+diff --git a/include/wget/wget.h b/include/wget/wget.h
+index f6cb050..8ed56a2 100644
+--- a/include/wget/wget.h
++++ b/include/wget/wget.h
+@@ -1094,8 +1094,11 @@ void * NULLABLE wget_stringmap_iterator_next(wget_stringmap_iterator *h, void **
+ /*
+  * Thread wrapper routines
+  */
+-
+-typedef unsigned long wget_thread_id;
++#ifdef __MVS__
++	typedef pthread_t wget_thread_id;
++#else
++	typedef unsigned long wget_thread_id;
++#endif
+ typedef struct wget_thread_st *wget_thread;
+ typedef struct wget_thread_mutex_st *wget_thread_mutex;
+ typedef struct wget_thread_cond_st *wget_thread_cond;

@@ -1,0 +1,20 @@
+diff --git a/libwget/dns.c b/libwget/dns.c
+index 967bddb..c39a3bc 100644
+--- a/libwget/dns.c
++++ b/libwget/dns.c
+@@ -36,6 +36,15 @@
+ #include <wget.h>
+ #include "private.h"
+ 
++#if defined __MVS__
++# ifndef NI_MAXSERV
++#  define NI_MAXSERV 32
++# endif
++# ifndef NI_MAXHOST
++#  define NI_MAXHOST 1025
++# endif
++#endif
++
+ /**
+  * \file
+  * \brief Functions for resolving names/IPs
