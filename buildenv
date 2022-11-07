@@ -1,4 +1,3 @@
-#!/bin/sh
 #
 # Set up environment variables for general build tool to operate
 #
@@ -15,31 +14,21 @@ fi
 
 export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes'"
 
-#
-# Need to resolve these env vars now 
-#
-cd $HOME/zopen/prod/openssl; . ./.env; cd $OLDPWD
-cd $HOME/zopen/prod/zlib; . ./.env; cd $OLDPWD
-
 export OPENSSL_CFLAGS="-I$OPENSSL_HOME/include -I$ZLIB_HOME/include"
 export OPENSSL_LIBS="-L$OPENSSL_HOME/lib -L$ZLIB_HOME/lib -lcrypto -lssl -lz"
 
 export ZOPEN_EXTRA_CPPFLAGS="${OPENSSL_CFLAGS}"
 export LDFLAGS="${OPENSSL_LIBS}"
-#
-# Required for proper operation of (USS shipped) sed
-#
-export _UNIX03=YES
+export ZOPEN_CHECK="skip"
 
+#FIXME:
 zopen_check_results()
 {
-#!/bin/sh
 #
 # Results should be 0 errors, and no more than 10 failures
 # FAIL:	 10
 # ERROR: 0
 #
-set -x
 chk="$2_check.log"
 
 failures=$(egrep '^# FAIL:' ${chk} | tail -1 | awk ' { print $3; }')
