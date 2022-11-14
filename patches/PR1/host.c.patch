@@ -1,0 +1,55 @@
+diff --git a/src/host.c b/src/host.c
+index b136ec8..d11346d 100644
+--- a/src/host.c
++++ b/src/host.c
+@@ -257,15 +257,32 @@ static int _release_job(wget_thread_id *ctx, JOB *job)
+ 		for (int it = 0; it < wget_vector_size(job->parts); it++) {
+ 			PART *part = wget_vector_get(job->parts, it);
+ 
++#ifdef __MVS__
++			if (part->inuse && part->used_by.__ == self.__) {
++#else
+ 			if (part->inuse && part->used_by == self) {
++#endif
+ 				part->inuse = 0;
++#ifdef __MVS__
++				part->used_by.__ = 0;
++#else
+ 				part->used_by = 0;
++#endif
+ 				debug_printf("released chunk %d/%d %s\n", it + 1, wget_vector_size(job->parts), job->blacklist_entry->local_filename);
+ 			}
+ 		}
++#ifdef __MVS__
++	} else if (job->inuse && job->used_by.__ == self.__) {
++#else
+ 	} else if (job->inuse && job->used_by == self) {
++#endif
+ 		job->inuse = job->done = 0;
++
++#ifdef __MVS__
++		job->used_by.__ = 0;
++#else
+ 		job->used_by = 0;
++#endif
+ 		debug_printf("released job %s\n", job->iri->uri);
+ 	}
+ 
+@@ -282,9 +299,17 @@ void host_release_jobs(HOST *host)
+ 	wget_thread_mutex_lock(hosts_mutex);
+ 
+ 	if (host->robot_job) {
++#ifdef __MVS__
++		if (host->robot_job->inuse && host->robot_job->used_by.__ == self.__) {
++#else
+ 		if (host->robot_job->inuse && host->robot_job->used_by == self) {
++#endif
+ 			host->robot_job->inuse = host->robot_job->done = 0;
++#ifdef __MVS__
++			host->robot_job->used_by.__ = 0;
++#else
+ 			host->robot_job->used_by = 0;
++#endif
+ 			debug_printf("released robots.txt job\n");
+ 		}
+ 	}

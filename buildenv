@@ -4,7 +4,7 @@
 export ZOPEN_TYPE="TARBALL"
 
 export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-2.0.1.tar.gz"
-export ZOPEN_TARBALL_DEPS="curl gzip make perl openssl zlib zoslib"
+export ZOPEN_TARBALL_DEPS="curl gzip tar make perl openssl zlib zoslib"
 
 export ZOPEN_BOOTSTRAP=skip
 
@@ -12,30 +12,29 @@ if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
 	export ZOPEN_BOOTSTRAP=skip
 fi
 
-export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes'"
+export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes' --enable-shared=no"
 
 export ZOPEN_EXTRA_CPPFLAGS="-I\${OPENSSL_HOME}/include -I\${ZLIB_HOME}/include -I\${NCURSES_HOME}/include"
 export ZOPEN_EXTRA_LDFLAGS="-L\${OPENSSL_HOME}/lib -L\${ZLIB_HOME}/lib -L\${NCURSES_HOME}/lib"
 export ZOPEN_EXTRA_LIBS="$ZOPEN_EXTRA_LIBS -lssl -lcrypto -lz"
 
-#FIXME:
 zopen_check_results()
 {
-#
-# Results should be 0 errors, and no more than 10 failures
-# FAIL:	 10
-# ERROR: 0
-#
-chk="$2_check.log"
+chk="$1/$2_check.log"
 
-failures=$(egrep '^# FAIL:' ${chk} | tail -1 | awk ' { print $3; }')
-if [ ${failures} -gt 55 ]; then
-  return 2
-fi
-errors=$(egrep '^# ERROR:' ${chk} | tail -1 | awk ' { print $3; }')
-if [ ${errors} -gt 0 ]; then
-  return 2
-fi
+ERROR=$(egrep '^# ERROR:' ${chk} | tail -1 | awk '{ print $3; }')
+SKIP=$(egrep '^# SKIP:' ${chk} | tail -1 | awk '{ print $3; }')
+PASS=$(egrep '^# PASS:' ${chk} | tail -1 | awk '{ print $3; }')
+FAIL=$(egrep '^# FAIL:' ${chk} | tail -1 | awk '{ print $3; }')
+XFAIL=$(egrep '^# XFAIL:' ${chk} | tail -1 | awk '{ print $3; }')
+TOTAL=$(egrep '^# TOTAL:' ${chk} | tail -1 | awk '{ print $3; }')
 
-return 1
+totalTests=$(echo "${TOTAL}-${SKIP}" | bc )
+actualFailures=$(echo "${FAIL}+${XFAIL}+${ERROR}" | bc)
+
+cat <<ZZ
+actualFailures:$actualFailures
+totalTests:$totalTests
+expectedFailures:0
+ZZ
 }
