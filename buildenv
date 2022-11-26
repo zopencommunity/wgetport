@@ -14,12 +14,23 @@ fi
 
 export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes' --enable-shared=no"
 
-export ZOPEN_EXTRA_CPPFLAGS="-I\${OPENSSL_HOME}/include -I\${ZLIB_HOME}/include -I\${NCURSES_HOME}/include"
-export ZOPEN_EXTRA_LDFLAGS="-L\${OPENSSL_HOME}/lib -L\${ZLIB_HOME}/lib -L\${NCURSES_HOME}/lib"
+export ZOPEN_EXTRA_CPPFLAGS="-I\${OPENSSL_HOME}/include -I\${ZLIB_HOME}/include"
+export ZOPEN_EXTRA_LDFLAGS="-L\${OPENSSL_HOME}/lib -L\${ZLIB_HOME}/lib"
 export ZOPEN_EXTRA_LIBS="$ZOPEN_EXTRA_LIBS -lssl -lcrypto -lz"
 
 zopen_check_results()
 {
+# ============================================================================
+# Testsuite summary for wget2 2.0.1
+# ============================================================================
+# TOTAL: 20
+# PASS:  3
+# SKIP:  17
+# XFAIL: 0
+# FAIL:  0
+# XPASS: 0
+# ERROR: 0
+# ============================================================================
 chk="$1/$2_check.log"
 
 ERROR=$(egrep '^# ERROR:' ${chk} | tail -1 | awk '{ print $3; }')
@@ -37,4 +48,9 @@ actualFailures:$actualFailures
 totalTests:$totalTests
 expectedFailures:0
 ZZ
+}
+
+zopen_post_install()
+{
+   cd "$1/bin" && ln -s wget2 wget
 }
