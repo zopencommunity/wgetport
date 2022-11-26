@@ -3,8 +3,9 @@
 #
 export ZOPEN_TYPE="TARBALL"
 
-export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-2.0.1.tar.gz"
-export ZOPEN_TARBALL_DEPS="curl gzip tar make perl openssl zlib zoslib"
+#export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-2.0.1.tar.gz" <-- this is wget2
+export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget-1.21.3.tar.gz"
+export ZOPEN_TARBALL_DEPS="git curl gzip make perl openssl zlib zoslib"
 
 export ZOPEN_BOOTSTRAP=skip
 
@@ -12,7 +13,7 @@ if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
 	export ZOPEN_BOOTSTRAP=skip
 fi
 
-export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes' --enable-shared=no"
+export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes' --with-ssl='openssl' --disable-rpath --without-gpgme --enable-shared=no"
 
 export ZOPEN_EXTRA_CPPFLAGS="-I\${OPENSSL_HOME}/include -I\${ZLIB_HOME}/include"
 export ZOPEN_EXTRA_LDFLAGS="-L\${OPENSSL_HOME}/lib -L\${ZLIB_HOME}/lib"
@@ -50,7 +51,3 @@ expectedFailures:0
 ZZ
 }
 
-zopen_post_install()
-{
-   cd "$1/bin" && ln -s wget2 wget
-}
