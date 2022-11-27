@@ -7,30 +7,28 @@ export ZOPEN_TYPE="TARBALL"
 export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget-1.21.3.tar.gz"
 
 #
-# md5 needed from coreutils
+# Had to modify Makefile.am which pulled in autoconf, automake
 #
-export ZOPEN_TARBALL_DEPS="git curl gzip make perl openssl zlib zoslib coreutils"
-
-export ZOPEN_BOOTSTRAP=skip
+export ZOPEN_TARBALL_DEPS="git curl gzip make openssl zlib zoslib perl m4 autoconf automake"
 
 if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-	export ZOPEN_BOOTSTRAP=skip
+	export ZOPEN_BOOTSTRAP='skip'
+  export ZOPEN_BOOTSTRAP_OPTS=''
 fi
 export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes' --with-ssl='openssl' --disable-rpath"
 
 zopen_check_results()
 {
-# ============================================================================
-# Testsuite summary for wget2 2.0.1
-# ============================================================================
-# TOTAL: 20
-# PASS:  3
-# SKIP:  17
+#============================================================================
+#Testsuite summary for wget 1.21.3
+#============================================================================
+# TOTAL: 94
+# PASS:  15
+# SKIP:  14
 # XFAIL: 0
-# FAIL:  0
+# FAIL:  65
 # XPASS: 0
 # ERROR: 0
-# ============================================================================
 chk="$1/$2_check.log"
 
 ERROR=$(egrep '^# ERROR:' ${chk} | tail -1 | awk '{ print $3; }')
@@ -40,13 +38,13 @@ FAIL=$(egrep '^# FAIL:' ${chk} | tail -1 | awk '{ print $3; }')
 XFAIL=$(egrep '^# XFAIL:' ${chk} | tail -1 | awk '{ print $3; }')
 TOTAL=$(egrep '^# TOTAL:' ${chk} | tail -1 | awk '{ print $3; }')
 
-totalTests=$(echo "${TOTAL}-${SKIP}" | bc )
-actualFailures=$(echo "${FAIL}+${XFAIL}+${ERROR}" | bc)
+totalTests=$((${TOTAL}-${SKIP}))
+actualFailures=$((${FAIL}+${XFAIL}+${ERROR}))
 
 cat <<ZZ
 actualFailures:$actualFailures
 totalTests:$totalTests
-expectedFailures:0
+expectedFailures:65
 ZZ
 }
 

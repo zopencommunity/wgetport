@@ -1,0 +1,22 @@
+diff --git a/src/netrc.c b/src/netrc.c
+index 0008846..82bb64f 100644
+--- a/src/netrc.c
++++ b/src/netrc.c
+@@ -486,6 +486,9 @@ free_netrc(acc_t *l)
+ const char *
+ test_parse_netrc(void)
+ {
++#ifdef __MVS__
++  return NULL; /* no fmemopen function */
++#else
+   static const struct test {
+     const char *pw_in;
+     const char *pw_expected;
+@@ -531,6 +534,7 @@ test_parse_netrc(void)
+     }
+ 
+   return NULL;
++#endif
+ }
+ #endif
+ 
