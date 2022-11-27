@@ -5,19 +5,18 @@ export ZOPEN_TYPE="TARBALL"
 
 #export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-2.0.1.tar.gz" <-- this is wget2
 export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget-1.21.3.tar.gz"
-export ZOPEN_TARBALL_DEPS="git curl gzip make perl openssl zlib zoslib"
+
+#
+# md5 needed from coreutils
+#
+export ZOPEN_TARBALL_DEPS="git curl gzip make perl openssl zlib zoslib coreutils"
 
 export ZOPEN_BOOTSTRAP=skip
 
 if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
 	export ZOPEN_BOOTSTRAP=skip
 fi
-
-export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes' --with-ssl='openssl' --disable-rpath --without-gpgme --enable-shared=no"
-
-export ZOPEN_EXTRA_CPPFLAGS="-I\${OPENSSL_HOME}/include -I\${ZLIB_HOME}/include"
-export ZOPEN_EXTRA_LDFLAGS="-L\${OPENSSL_HOME}/lib -L\${ZLIB_HOME}/lib"
-export ZOPEN_EXTRA_LIBS="$ZOPEN_EXTRA_LIBS -lssl -lcrypto -lz"
+export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes' --with-ssl='openssl' --disable-rpath"
 
 zopen_check_results()
 {

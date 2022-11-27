@@ -6,4 +6,4 @@ PACKAGE='sed-4.8'
 POURL="https://translationproject.org/latest/${PACKAGE}/"
 PODIR="/tmp/po_$$"
 echo "Writing files to ${PODIR}"
-wget2 --no-verbose --directory-prefix ${PODIR} --no-directories --recursive --level 1 --accept .po --accept .po.1 ${POURL}
+wget --no-verbose --directory-prefix ${PODIR} --no-directories --recursive --level 1 --accept .po --accept .po.1 ${POURL}
