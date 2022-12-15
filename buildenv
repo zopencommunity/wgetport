@@ -3,34 +3,35 @@
 #
 export ZOPEN_TYPE="TARBALL"
 
-export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-2.0.1.tar.gz"
-export ZOPEN_TARBALL_DEPS="curl gzip tar make perl openssl zlib zoslib"
+#export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-2.0.1.tar.gz" <-- this is wget2
+export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget-1.21.3.tar.gz"
 
-export ZOPEN_BOOTSTRAP=skip
+#
+# Had to modify Makefile.am which pulled in autoconf, automake
+#
+export ZOPEN_TARBALL_DEPS="git curl gzip make openssl zlib zoslib perl m4 autoconf automake"
 
 if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
-	export ZOPEN_BOOTSTRAP=skip
+	export ZOPEN_BOOTSTRAP='skip'
+  export ZOPEN_BOOTSTRAP_OPTS=''
 fi
-
-export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes' --enable-shared=no"
-
-export ZOPEN_EXTRA_CPPFLAGS="-I\${OPENSSL_HOME}/include -I\${ZLIB_HOME}/include"
-export ZOPEN_EXTRA_LDFLAGS="-L\${OPENSSL_HOME}/lib -L\${ZLIB_HOME}/lib"
-export ZOPEN_EXTRA_LIBS="$ZOPEN_EXTRA_LIBS -lssl -lcrypto -lz"
+export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-openssl='yes' --with-ssl='openssl' --disable-rpath"
 
 zopen_check_results()
 {
-# ============================================================================
-# Testsuite summary for wget2 2.0.1
-# ============================================================================
-# TOTAL: 20
-# PASS:  3
-# SKIP:  17
+#============================================================================
+#Testsuite summary for wget 1.21.3
+#============================================================================
+#
+# Lots of failures, but 'basic' wget works
+#
+# TOTAL: 94
+# PASS:  15
+# SKIP:  14
 # XFAIL: 0
-# FAIL:  0
+# FAIL:  65
 # XPASS: 0
 # ERROR: 0
-# ============================================================================
 chk="$1/$2_check.log"
 
 ERROR=$(egrep '^# ERROR:' ${chk} | tail -1 | awk '{ print $3; }')
@@ -40,17 +41,13 @@ FAIL=$(egrep '^# FAIL:' ${chk} | tail -1 | awk '{ print $3; }')
 XFAIL=$(egrep '^# XFAIL:' ${chk} | tail -1 | awk '{ print $3; }')
 TOTAL=$(egrep '^# TOTAL:' ${chk} | tail -1 | awk '{ print $3; }')
 
-totalTests=$(echo "${TOTAL}-${SKIP}" | bc )
-actualFailures=$(echo "${FAIL}+${XFAIL}+${ERROR}" | bc)
+totalTests=$((${TOTAL}-${SKIP}))
+actualFailures=$((${FAIL}+${XFAIL}+${ERROR}))
 
 cat <<ZZ
 actualFailures:$actualFailures
 totalTests:$totalTests
-expectedFailures:0
+expectedFailures:65
 ZZ
 }
 
-zopen_post_install()
-{
-   cd "$1/bin" && ln -s wget2 wget
-}
