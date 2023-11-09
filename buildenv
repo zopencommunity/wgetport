@@ -1,17 +1,18 @@
-#
-# Set up environment variables for general build tool to operate
-#
-export ZOPEN_TYPE="TARBALL"
+# bump: wget-version /WGET_VERSION="(.*)"/ http://mirrors.syringanetworks.net/gnu/wget/|re:/href="wget-([\d.]+).tar.gz"/$1/|semver:*
+# bump: wget2-version /WGET2_VERSION="(.*)"/ http://mirrors.syringanetworks.net/gnu/wget/|re:/href="wget2-([\d.]+).tar.gz"/$1/|semver:*
+WGET_VERSION="1.21.3"
+WGET2_VERSION="2.0.1"
 
-#export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-2.0.1.tar.gz" <-- this is wget2
-export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget-1.21.3.tar.gz"
+export ZOPEN_BUILD_LINE="STABLE"
+export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget-${WGET_VERSION}.tar.gz"
+# export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-${WGET2_VERSION}.tar.gz" <-- this is wget2
 
 #
 # Had to modify Makefile.am which pulled in autoconf, automake
 #
-export ZOPEN_TARBALL_DEPS="git curl gzip make openssl zlib zoslib perl m4 autoconf automake"
+export ZOPEN_STABLE_DEPS="git curl gzip make openssl zlib zoslib perl m4 autoconf automake"
 
-if [ "${ZOPEN_TYPE}x" = "TARBALLx" ]; then
+if [ "${ZOPEN_BUILD_LINE}x" = "STABLEx" ]; then
 	export ZOPEN_BOOTSTRAP='skip'
   export ZOPEN_BOOTSTRAP_OPTS=''
 fi
@@ -51,3 +52,7 @@ expectedFailures:65
 ZZ
 }
 
+zopen_get_version()
+{
+   echo $WGET_VERSION
+}
