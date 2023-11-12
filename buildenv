@@ -4,7 +4,7 @@ WGET_VERSION="1.21.3"
 WGET2_VERSION="2.0.1"
 
 export ZOPEN_BUILD_LINE="STABLE"
-export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget-${WGET_VERSION}.tar.gz"
+export ZOPEN_STABLE_URL="http://mirrors.syringanetworks.net/gnu/wget/wget-${WGET_VERSION}.tar.gz"
 # export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-${WGET2_VERSION}.tar.gz" <-- this is wget2
 
 #
