@@ -1,6 +1,6 @@
 # bump: wget-version /WGET_VERSION="(.*)"/ http://mirrors.syringanetworks.net/gnu/wget/|re:/href="wget-([\d.]+).tar.gz"/$1/|semver:*
 # bump: wget2-version /WGET2_VERSION="(.*)"/ http://mirrors.syringanetworks.net/gnu/wget/|re:/href="wget2-([\d.]+).tar.gz"/$1/|semver:*
-WGET_VERSION="1.21.3"
+WGET_VERSION="1.21.4"
 WGET2_VERSION="2.0.1"
 
 export ZOPEN_BUILD_LINE="STABLE"
