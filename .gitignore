@@ -1,5 +1,8 @@
 wget-1.21.3
 wget2-2.0.1
+wget-1.21.4
+wget2-2.1.0
 log
+log.STABLE
 install
 nohup.out
