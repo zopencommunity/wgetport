@@ -5,8 +5,8 @@ WGET2_VERSION="2.1.0"
 export ZOPEN_CATEGORIES="networking"
 
 export ZOPEN_BUILD_LINE="STABLE"
-export ZOPEN_STABLE_URL="http://mirrors.syringanetworks.net/gnu/wget/wget-${WGET_VERSION}.tar.gz"
-# export ZOPEN_TARBALL_URL="http://mirrors.syringanetworks.net/gnu/wget/wget2-${WGET2_VERSION}.tar.gz" <-- this is wget2
+export ZOPEN_STABLE_URL="https://ftp.gnu.org/gnu/wget/wget-${WGET_VERSION}.tar.gz"
+# export ZOPEN_TARBALL_URL="https://ftp.gnu.org/gnu/wget/wget/wget2-${WGET2_VERSION}.tar.gz" <-- this is wget2
 
 #
 # Had to modify Makefile.am which pulled in autoconf, automake
